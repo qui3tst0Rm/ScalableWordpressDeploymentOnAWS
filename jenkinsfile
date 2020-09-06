@@ -52,7 +52,7 @@ pipeline {
             }
         }
 
-        stage ('write data to file') {
+        /*stage ('write data to file') {
             steps {
                 script {
                     writeFile(file:'/var/jenkins_home/env_vars/Live_Box.txt', text: 'No-Box')
@@ -75,7 +75,7 @@ pipeline {
                 '''                
 
             }
-        }
+        }*/
 
     }
 }
