@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID = credentials ('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
+    }
+    stages {
+        
+        // get code form repo
+        stage ('scm checkout') {
+            steps {
+                echo 'retrieveing code from github'
+                git 'https://github.com/qui3tst0Rm/ScalableWordpressDeploymentOnAWS.git'
+                echo 'code retrival complete'
+            }
+        }
+
+        // initialize configuration files in working directory
+        stage ('initialize tf') {
+            steps {
+                echo 'initializing working directory'
+                sh 'terraform init'
+                echo 'working directory initialized'
+            }
+        }
+
+        // run terraform destroy
+        stage ('tf destroy') {
+            steps {
+                echo 'destroying terraform config'
+                sh 'terraform destroy -auto-approve'
+                echo 'destruction complete'
+            }
+        }
+
+        /*stage ('write data to file') {
+            steps {
+                script {
+                    writeFile(file:'/var/jenkins_home/env_vars/Live_Box.txt', text: 'No-Box')
+                    writeFile(file:'/var/jenkins_home/env_vars/Red_Box_ip.txt', text: 'Red-IP')
+                    writeFile(file:'/var/jenkins_home/env_vars/Blue_Box_ip.txt', text: 'Blue-IP')
+                    writeFile(file:'/var/jenkins_home/env_vars/Nginx_Box_ip.txt', text: 'Nginx-IP')
+                    writeFile(file:'/var/jenkins_home/env_vars/SwitchTraffic.txt', text: 'Box')
+                }
+                sh '''
+                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Live_Box.txt
+                sudo chmod 600 /var/jenkins_home/env_vars/Live_Box.txt
+                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Red_Box_ip.txt
+                sudo chmod 600 /var/jenkins_home/env_vars/Red_Box_ip.txt
+                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Blue_Box_ip.txt
+                sudo chmod 600 /var/jenkins_home/env_vars/Blue_Box_ip.txt
+                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Nginx_Box_ip.txt
+                sudo chmod 600 /var/jenkins_home/env_vars/Nginx_Box_ip.txt
+                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/SwitchTraffic.txt
+                sudo chmod 600 /var/jenkins_home/env_vars/SwitchTraffic.txt
+                '''                
+
+            }
+        }*/
+
+    }
+}
