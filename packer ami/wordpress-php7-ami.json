@@ -1,0 +1,47 @@
+
+    {
+        "variables": {
+        "instance_size": "t2.micro",
+        "ami_name": "wordpress-packed-ami",
+        "base_ami": "ami-0bec9f0e15fbcaa4b",
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "ssh_username": "ec2-user"
+      },
+      "builders": [
+        {
+          "type": "amazon-ebs",
+          "region": "eu-west-2",
+          "source_ami": "{{user `base_ami`}}",
+          "access_key": "{{user `aws_access_key`}}",
+          "secret_key": "{{user `aws_secret_key`}}",
+          "instance_type": "{{user `instance_size`}}",
+          "ssh_username": "{{user `ssh_username`}}",
+          "ami_name": "{{user `ami_name`}}",
+          "ssh_pty": "true",
+          "tags": {
+            "Name": "Wordpress",
+            "BuiltBy": "Packer"
+          }
+        }
+      ],
+      "description": "AWS Image",
+      "provisioners": [
+          {
+              "type": "shell",
+              "inline": [
+		"sudo yum update -y",
+		"sudo yum install -y httpd",
+		"sudo systemctl start httpd",
+		"sudo wget https://wordpress.org/latest.tar.gz",
+		"tar -xzf latest.tar.gz",
+		"cd wordpress",
+		"cp wp-config-sample.php wp-config.php",
+		"SALT=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)",
+		"STRING='put your unique phrase here'",
+		"printf '%s\n' \"g/$STRING/d\" a \"$SALT\" . w| ed -s wp-config.php",
+ 		"sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2"
+              ]
+          }
+      ]
+    }

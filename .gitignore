@@ -1,0 +1,9 @@
+.terraform
+*.tfstate
+*.backup
+.git
+backend*.tf
+*.pdf
+* .pdf
+backend-scalable-wordpress.tf
+notes.txt
