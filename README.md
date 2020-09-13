@@ -2,6 +2,16 @@
 
 ## Resources 
 Elastic Compute (EC2),
+
+
 Elastic Load Balancer (ELB),
-Nat Gateway,
-Amazon RDS,
+
+
+Nat Instance,
+
+
+Amazon RDS - Mysql,
+
+
+Auto Scaling Groups
+
