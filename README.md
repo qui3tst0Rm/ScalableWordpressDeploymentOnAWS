@@ -1,4 +1,4 @@
-# Template for a scalable workpress deployment on AWS
+# Template for a scalable workpress deployment on AWS with Terraform
 
 ## Resources 
 Elastic Compute (EC2),
