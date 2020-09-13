@@ -1,5 +1,5 @@
 #################################################################
-#           Wordpress Launch Config & Auto Scaling              #  
+#                    Wordpress Launch Config                    #  
 #################################################################
 resource "aws_launch_configuration" "webserver_launch_config" {
   name_prefix     = "wordpress-launch-config-"
@@ -16,6 +16,10 @@ resource "aws_launch_configuration" "webserver_launch_config" {
 
 }
 
+#################################################################
+#                      Auto Scaling Group                       #  
+#################################################################
+
 resource "aws_autoscaling_group" "wordpress_asg" {
   name                 = "wordpress asg"
   launch_configuration = aws_launch_configuration.webserver_launch_config.name
@@ -23,17 +27,26 @@ resource "aws_autoscaling_group" "wordpress_asg" {
   max_size             = 6
   desired_capacity     = 3
   vpc_zone_identifier  = [aws_subnet.private-snet[0].id, aws_subnet.private-snet[1].id, aws_subnet.private-snet[2].id]
+  #target_group_arns = [aws_lb_target_group.wordpress_tg.arn]
 
   lifecycle {
     create_before_destroy = true
   }
+
+  /*tag {
+    key = "Name"
+    value = "wordpress-web"
+    propagate_at_launch = true
+  }*/
 
   # Inappropriate value for attribute "tags": set of map of string required.
 
 
 }
 
-
+#################################################################
+#                      MYSQL DB Instance                        #  
+#################################################################
 
 resource "aws_db_instance" "wordpress_db" {
   allocated_storage      = 20
@@ -49,6 +62,11 @@ resource "aws_db_instance" "wordpress_db" {
   vpc_security_group_ids = local.db_sec_group
   db_subnet_group_name   = aws_db_subnet_group.pri_db_snet_grp.name
 }
+
+#################################################################
+#     Monitoring with Prometheus-Grahana-AlertManager           #  
+#################################################################
+
 
 
 

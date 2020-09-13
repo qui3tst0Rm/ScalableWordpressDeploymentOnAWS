@@ -3,7 +3,7 @@ data "aws_ami" "wordpress_packer_image" {
   most_recent = true
   filter {
     name   = "name"
-    values = ["wordpress-packed-ami"]
+    values = ["wordpress-php7-node_exporter-packer-ami"]
   }
 
   filter {

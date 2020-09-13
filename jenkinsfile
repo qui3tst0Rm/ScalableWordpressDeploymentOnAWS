@@ -47,7 +47,7 @@ pipeline {
         stage ('tf apply') {
             steps {
                 echo 'applying terraform config to environment'
-                sh 'terraform destroy -auto-approve'
+                sh 'terraform apply -auto-approve'
                 echo 'deployment complete'
             }
         }

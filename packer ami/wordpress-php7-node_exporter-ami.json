@@ -2,7 +2,7 @@
     {
         "variables": {
         "instance_size": "t2.micro",
-        "ami_name": "wordpress-packed-ami",
+        "ami_name": "wordpress-php7-node_exporter-packer-ami",
         "base_ami": "ami-0bec9f0e15fbcaa4b",
         "aws_access_key": "",
         "aws_secret_key": "",
@@ -20,7 +20,7 @@
           "ami_name": "{{user `ami_name`}}",
           "ssh_pty": "true",
           "tags": {
-            "Name": "Wordpress",
+            "Name": "Wordpress-php7-node_exporter",
             "BuiltBy": "Packer"
           }
         }
@@ -29,19 +29,7 @@
       "provisioners": [
           {
               "type": "shell",
-              "inline": [
-		"sudo yum update -y",
-		"sudo yum install -y httpd",
-		"sudo systemctl start httpd",
-		"sudo wget https://wordpress.org/latest.tar.gz",
-		"tar -xzf latest.tar.gz",
-		"cd wordpress",
-		"cp wp-config-sample.php wp-config.php",
-		"SALT=$(curl -L https://api.wordpress.org/secret-key/1.1/salt/)",
-		"STRING='put your unique phrase here'",
-		"printf '%s\n' \"g/$STRING/d\" a \"$SALT\" . w| ed -s wp-config.php",
- 		"sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2"
-              ]
+              "script": "install-wp-node_exporter.sh"              
           }
       ]
     }

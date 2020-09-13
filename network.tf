@@ -25,6 +25,8 @@ resource "aws_instance" "mynat" {
   key_name               = var.key_name
   subnet_id              = local.pub_snet_ids[count.index]
   vpc_security_group_ids = [aws_security_group.nat_instance_sec_grp.id]
+  source_dest_check      = false
+
 
   tags = {
     Name = var.nat_instance_names[count.index]
@@ -116,6 +118,19 @@ resource "aws_security_group" "alb_sec_grp" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  /*ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }*/
+
+  /*ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }*/
   ingress {
     from_port   = 22
     to_port     = 22
@@ -147,7 +162,14 @@ resource "aws_security_group" "nat_instance_sec_grp" {
     cidr_blocks = ["0.0.0.0/0"]
     #security_groups = [aws_security_group.webserver-sec-grp.id]
     # might need to allow inbound access from db , "DB-Instance-sec-gp"
+  }
 
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.webserver_sec_grp.id]
+    #cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -185,12 +207,26 @@ resource "aws_security_group" "webserver_sec_grp" {
     security_groups = [aws_security_group.alb_sec_grp.id]
     #cidr_blocks = ["0.0.0.0/0"]
   }
-
+  
+  ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    #cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [aws_security_group.alb_sec_grp.id]
+  }
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    #cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [aws_security_group.alb_sec_grp.id]
   }
 
   egress {
@@ -271,6 +307,25 @@ resource "aws_lb_target_group" "wordpress_tg" {
   }
 }
 
+/*resource "aws_lb_target_group" "wordpress_tg1" {
+  name        = "lb-target-group9100"
+  port        = 9100
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.wordpress_site.id
+  target_type = "instance"
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 3
+    timeout             = 5
+    interval            = 6
+    path                = var.health_check_path9100
+    protocol            = "HTTP"
+    port                = 9100
+    matcher             = 200
+  }
+}*/
+
 resource "aws_lb_listener" "wordpress_tg_list" {
   load_balancer_arn = aws_lb.wordpress_alb.arn
   port              = "80"
@@ -284,6 +339,19 @@ resource "aws_lb_listener" "wordpress_tg_list" {
   }
 }
 
+/*resource "aws_lb_listener" "wordpress_tg_list9100" {
+  load_balancer_arn = aws_lb.wordpress_alb.arn
+  port              = "9100"
+  protocol          = "HTTP"
+  #ssl_policy        = "ELBSecurityPolicy-2016-08"
+  #certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.wordpress_tg.arn
+  }
+}*/
+
 # Create target group attachment
 
 /*resource "aws_lb_target_group_attachment" "wordpress_tga" {
@@ -295,9 +363,9 @@ resource "aws_lb_listener" "wordpress_tg_list" {
 }*/
 # Create a new ALB Target Group attachment
 resource "aws_autoscaling_attachment" "wordpress_asga" {
-    autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
-    alb_target_group_arn = aws_lb_target_group.wordpress_tg.arn
-    
+  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
+  alb_target_group_arn   = aws_lb_target_group.wordpress_tg.arn
+
 
 }
 

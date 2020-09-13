@@ -135,3 +135,8 @@ variable "health_check_path" {
   description = "path for health check"
   default     = "/wp-admin/install.php"
 }
+
+/*variable "health_check_path9100" {
+  description = "path for health check"
+  default     = "/metrics"
+}*/

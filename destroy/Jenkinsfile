@@ -34,30 +34,6 @@ pipeline {
             }
         }
 
-        /*stage ('write data to file') {
-            steps {
-                script {
-                    writeFile(file:'/var/jenkins_home/env_vars/Live_Box.txt', text: 'No-Box')
-                    writeFile(file:'/var/jenkins_home/env_vars/Red_Box_ip.txt', text: 'Red-IP')
-                    writeFile(file:'/var/jenkins_home/env_vars/Blue_Box_ip.txt', text: 'Blue-IP')
-                    writeFile(file:'/var/jenkins_home/env_vars/Nginx_Box_ip.txt', text: 'Nginx-IP')
-                    writeFile(file:'/var/jenkins_home/env_vars/SwitchTraffic.txt', text: 'Box')
-                }
-                sh '''
-                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Live_Box.txt
-                sudo chmod 600 /var/jenkins_home/env_vars/Live_Box.txt
-                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Red_Box_ip.txt
-                sudo chmod 600 /var/jenkins_home/env_vars/Red_Box_ip.txt
-                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Blue_Box_ip.txt
-                sudo chmod 600 /var/jenkins_home/env_vars/Blue_Box_ip.txt
-                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/Nginx_Box_ip.txt
-                sudo chmod 600 /var/jenkins_home/env_vars/Nginx_Box_ip.txt
-                sudo chown jenkins:jenkins /var/jenkins_home/env_vars/SwitchTraffic.txt
-                sudo chmod 600 /var/jenkins_home/env_vars/SwitchTraffic.txt
-                '''                
-
-            }
-        }*/
 
     }
 }
