@@ -30,5 +30,6 @@ ExecStart=/usr/local/bin/node_exporter
 WantedBy=multi-user.target
 END
 sudo systemctl daemon-reload
-sudo systemctl enable node_exporter
 sudo systemctl enable httpd
+sudo systemctl enable node_exporter
+

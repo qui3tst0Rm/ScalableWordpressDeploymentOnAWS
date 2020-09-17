@@ -12,6 +12,8 @@ resource "aws_subnet" "public-snet" {
   map_public_ip_on_launch = true
 }
 
+
+
 # create private subnets (currently set to create 3)
 resource "aws_subnet" "private-snet" {
   vpc_id            = aws_vpc.wordpress_site.id
@@ -25,6 +27,7 @@ resource "aws_subnet" "private-snet" {
 
 }
 
+# create db subnet group 
 resource "aws_db_subnet_group" "pri_db_snet_grp" {
   name       = "pri_db_snet_grp"
   subnet_ids = local.pri_snet_ids

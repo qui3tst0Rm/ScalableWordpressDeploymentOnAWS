@@ -50,3 +50,12 @@ locals {
 locals {
   az = concat(["eu-west-2a", "eu-west-2b", "eu-west-2c"])
 }
+
+# wordpress db credentials
+/*locals {
+  wp-db-creds = jsondecode(
+    data.aws_secretsmanager_secret_version.creds.secret_string
+  )
+}*/
+
+

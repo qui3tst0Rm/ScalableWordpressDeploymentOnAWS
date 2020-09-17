@@ -1,4 +1,4 @@
-# Packer ami image for wordpress webserver
+# Packer ami for provisioning wordpress webserver
 data "aws_ami" "wordpress_packer_image" {
   most_recent = true
   filter {
@@ -13,7 +13,7 @@ data "aws_ami" "wordpress_packer_image" {
   owners = ["self"]
 }
 
-# ami image for nat instance
+# community amifor provisioning nat instance
 data "aws_ami" "nat_instance" {
   most_recent = true
 
@@ -29,7 +29,7 @@ data "aws_ami" "nat_instance" {
   owners = ["amazon"]
 }
 
-
+#
 data "template_file" "install_wp" {
   template = file("init.tpl")
 
@@ -38,3 +38,10 @@ data "template_file" "install_wp" {
     mysql_address = aws_db_instance.wordpress_db.address
   }
 }
+
+# to manage secerets wp db credentials
+/*data "aws_secretsmanager_secret_version" "creds" {
+  secret_id = "wp-db-creds"
+
+}*/
+

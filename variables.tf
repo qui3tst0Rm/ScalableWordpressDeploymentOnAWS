@@ -4,8 +4,14 @@ variable "region" {
 }
 
 ##########################################################
-#               CIDR BLOCK VARIABLES                     #
+#                       VPC Vars                         #
 ##########################################################
+
+# vpc name
+variable "vpc_name" {
+  description = "name of the vpc"
+  default     = "wordpress_site_vpc"
+}
 
 # list of availability zones within the eu-west-2 region
 variable "availability-zone-eu-west-2-region" {
@@ -14,6 +20,19 @@ variable "availability-zone-eu-west-2-region" {
   default     = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
 }
 
+##########################################################
+#               Internet Gateway Vars                    #
+##########################################################
+
+# internet gateway name
+variable "wordpress-vpc-igw-name" {
+  description = "name for the wordpress vpc inernet gateway"
+  default     = "wordpress-vpc-igw"
+}
+
+##########################################################
+#               CIDR BLOCK VARIABLES                     #
+##########################################################
 # cidr block for vpv
 variable "vpc-cidr" {
   default     = "10.0.0.0/20"
@@ -33,35 +52,61 @@ variable "list-pri-snet-cidr-blocks" {
   type        = list(string)
   default     = ["10.0.10.0/23", "10.0.12.0/23", "10.0.14.0/23"]
 }
+
 ##########################################################
-#              RESOURCE NAME VARIABLES                   #
+#              Auto Scaling Group Vars                   #
 ##########################################################
-# vpc name
-variable "vpc_name" {
-  description = "name of the vpc"
-  default     = "wordpress_site_vpc"
+variable "asg-min-size" {
+  default = 3
 }
 
-# internet gateway name
-variable "wordpress-vpc-igw-name" {
-  description = "name for the wordpress vpc inernet gateway"
-  default     = "wordpress-vpc-igw"
+variable "asg-max-size" {
+  default = 6
 }
 
-# private route table names
-variable "private-rtb-names" {
-  description = "private rtb names"
-  type        = list(string)
-  default     = ["pri-rtb-1-eu-west-2a-az", "pri-rtb-2-eu-west-2b-az", "pri-rtb-3-eu-west-2c-az"]
+variable "desired-capacity" {
+  default = 6
 }
 
-# public route table names
-variable "public-rtb-names" {
-  description = "public rtb names"
-  type        = list(string)
-  default     = ["pub-rtb-1-eu-west-2a-az", "pub-rtb-2-eu-west-2b-az", "pub-rtb-3-eu-west-2c-az"]
+##########################################################
+#              MYSQL DB Instance Vars                    #
+##########################################################
+
+variable "allocated_storage" {
+  default = 20
 }
 
+variable "storage_type" {
+  default = "gp2"
+}
+
+variable "engine" {
+  default = "mysql"
+}
+
+variable "engine_version" {
+  default = "5.7"
+}
+
+variable "instance_class" {
+  default = "db.t2.micro"
+}
+
+variable "db-name" {
+  default = "wpdbname"
+}
+
+variable "db-username" {
+  default = "wordpress"
+}
+
+variable "db-password" {
+  default = "Change_Me_w*njW#'@"
+}
+
+##########################################################
+#                   NAME VARIABLES                       #
+##########################################################
 # public subnets names
 variable "public-subnet-names" {
   description = "names for public subnets"
@@ -74,6 +119,21 @@ variable "private-subnet-names" {
   description = "names for private subnets"
   type        = list(string)
   default     = ["pri-snet-1-eu-west-2a-az", "pri-snet-2-eu-west-2b-az", "pri-snet-3-eu-west-2c-az"]
+}
+
+# public route table names
+variable "public-rtb-names" {
+  description = "public rtb names"
+  #type        = list(string)
+  default = "dmz-rtb"
+  #default     = ["pub-rtb-1-eu-west-2a-az", "pub-rtb-2-eu-west-2b-az", "pub-rtb-3-eu-west-2c-az"]
+}
+
+# private route table names
+variable "private-rtb-names" {
+  description = "private rtb names"
+  type        = list(string)
+  default     = ["pri-rtb-1-eu-west-2a-az", "pri-rtb-2-eu-west-2b-az", "pri-rtb-3-eu-west-2c-az"]
 }
 
 # ALB Name
@@ -96,24 +156,14 @@ variable "ec2-instance-names" {
   default     = ["web01-pri-snet1-eu-west-2a", "web02-pri-snet2-eu-west-2b", "web03-pri-snet3-eu-west-2c"]
 }
 
-variable "database_name" {
+/*variable "database_name" {
   description = "db server name"
   default     = "database-server"
-}
-
-# subnet for public resources
-/*variable "public_subnets" {
-  description = "subnet for public resources"
-  type        = list(string)
-  default     = ["aws_subnet.public_1.id", "aws_subnet.public_2.id"]
-}
-
-# subnet for private resources
-variable "private_subnets" {
-  description = "subnet for private resources"
-  type        = list(string)
-  default     = ["aws_subnet.private_1.id", "aws_subnet.private_2.id"]
 }*/
+
+##########################################################
+#                       OTHERS                           #
+##########################################################
 
 # instance type
 variable "instance_type" {
@@ -131,12 +181,9 @@ variable "private_key" {
   default = "~/.ssh/terraform5.pem"
 }
 
+
 variable "health_check_path" {
   description = "path for health check"
   default     = "/wp-admin/install.php"
 }
 
-/*variable "health_check_path9100" {
-  description = "path for health check"
-  default     = "/metrics"
-}*/
