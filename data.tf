@@ -13,7 +13,7 @@ data "aws_ami" "wordpress_packer_image" {
   owners = ["self"]
 }
 
-# community amifor provisioning nat instance
+# community ami for provisioning nat instance
 data "aws_ami" "nat_instance" {
   most_recent = true
 
@@ -44,4 +44,16 @@ data "template_file" "install_wp" {
   secret_id = "wp-db-creds"
 
 }*/
+
+####
+data "template_file" "cidrsubnet" {
+  count = var.total_subnet_count[terraform.workspace]
+
+  template = "$${cidrsubnet(vpc-cidr-block,3,current_count)}"
+
+  vars = {
+    vpc-cidr-block = var.vpc-cidr-block[terraform.workspace]
+    current_count  = count.index
+  }
+}
 

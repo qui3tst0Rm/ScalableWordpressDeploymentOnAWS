@@ -21,3 +21,7 @@ output "alb-dnsname" {
 output "alb-zone_id" {
   value = aws_lb.wordpress_alb.zone_id
 }
+
+output "s3-bucket_name" {
+  value = aws_s3_bucket.s3-rand-int.id
+}

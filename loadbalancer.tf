@@ -7,12 +7,12 @@ resource "aws_lb" "wordpress_alb" {
   name               = "AppLoadBalancer"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = local.alb_sec_group
-  subnets            = local.pub_snet_ids
+  security_groups    = [aws_security_group.alb_sec_grp.id]
+  subnets            = aws_subnet.public-snet[*].id
 
 
   tags = {
-    Name = var.lb_name
+    Name = var.lb-name[terraform.workspace]
   }
 
 }

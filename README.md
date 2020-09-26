@@ -6,4 +6,3 @@ Elastic Load Balancer (ELB),
 Nat Instance,
 Amazon RDS - Mysql,
 Auto Scaling Groups
-

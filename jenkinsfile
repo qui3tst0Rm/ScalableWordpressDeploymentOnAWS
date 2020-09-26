@@ -4,6 +4,9 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials ('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials ('AWS_SECRET_ACCESS_KEY')
+        DB_NAME = credentials ('DB_NAME')
+        DB_USERNAME = credentials ('DB_USERNAME')
+        DB_PASSWORD = credentials ('DB_PASSWORD')
     }
     stages {
         
@@ -45,6 +48,11 @@ pipeline {
 
         // run terraform apply
         stage ('tf apply') {
+            environment {
+                DB_NAME = credentials ('DB_NAME')
+                DB_USERNAME = credentials ('DB_USERNAME')
+                DB_PASSWORD = credentials ('DB_PASSWORD')
+    }
             steps {
                 echo 'applying terraform config to environment'
                 sh 'terraform apply -auto-approve'

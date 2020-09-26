@@ -6,3 +6,6 @@ backend*.tf
 *.pdf
 * .pdf
 notes.txt
+.idea
+creds.tf
+*.tfplan
