@@ -1,4 +1,5 @@
 .terraform
+.idea
 *.tfstate
 *.backup
 .git
@@ -6,6 +7,6 @@ backend*.tf
 *.pdf
 * .pdf
 notes.txt
-.idea
+.idea/
 creds.tf
 *.tfplan
